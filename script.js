@@ -3,6 +3,88 @@ const container = document.querySelector("main")
 container.style = 'display: flex;width: 100%;height: 100%;flex-wrap: wrap;'
 document.body.style = 'margin:0; width:100vw; height:100vh'
 
+//Creating a random pattern for the maze
+const randomMaze = () => {
+    // Randomize size and setting parametre for possible slabs
+    const height = Math.floor((Math.random() * 50))
+    const width = Math.floor((Math.random() * 50))
+    const TypeOfSlab = ["*", ".", "S", "T"]
+    let randomLevel = []
+
+    //Looping on the height, to create each array inside randomLevel
+    for (let i = 0; i < height; i++) {
+        randomLevel[i] = new Array
+        // Looping on the width, to create each box inside randomLevel[i]
+        for (let j = 0; j < width; j++) {
+            randomLevel[i][j] = 0
+        }
+    }
+    console.log(randomLevel)
+
+    // setting a start
+    let x = Math.floor(Math.random() * height)
+    let y = Math.floor(Math.random() * width)
+    randomLevel[x][y] = "S"
+    console.log(x + "/" + y)
+
+    // setting the path from the start
+    // how long should be the main path : 
+    let pathSize = Math.floor(Math.random() * (x + y) / 3) + (x + y) / 10
+    console.log(pathSize)
+    let previousX = 0
+    let previousY = 0
+    for (let i = 0; i < pathSize; i++) {
+        let TwoBeforeX = previousX
+        let TwoBeforeY = previousY
+        previousX = x
+        previouxY = y
+        // console.log(x)
+        if (Math.random() < 0.5) {
+            if (TwoBeforeX - previousX < 0 && previousX + 1 <= width) {
+                x = previousX + 1
+            }
+            else if (previousX - 1 >= 0) {
+                x = previousX - 1
+            }
+            else if (TwoBeforeY - previousY < 0 && previousY + 1 <= height) {
+                y = previousY + 1
+            }
+            else if (previousY - 1 >= 0) {
+                y = previousY - 1
+            }
+            else {
+                x = TwoBeforeX
+                y = TwoBeforeY
+            }
+        }
+        if (Math.random() > 0.5) {
+            if (TwoBeforeY - previousY < 0 && previousY + 1 <= height) {
+                y = previousY + 1
+            }
+            else if (previousY - 1 >= 0) {
+                y = previousY - 1
+            }
+            else if (TwoBeforeX - previousX < 0 && previousX + 1 <= width) {
+                x = previousX + 1
+            }
+            else if (previousX - 1 >= 0) {
+                x = previousX - 1
+            }
+            else {
+                x = TwoBeforeX
+                y = TwoBeforeY
+            }
+        }
+    console.log(x)
+    console.log(y)
+    randomLevel[x][y] = "*"
+    
+    }
+    // console.log(randomLevel)
+}
+    
+    
+
 
 // Template of the Maze
 const LEVEL = [
@@ -47,7 +129,7 @@ const LEVEL = [
 
     ]
 ]
-// const wich lvl am I loading  initialising height and width? 
+// const wich lvl am I loading + initialising height and width
 let lvl = 1
 let actualLevel = LEVEL[lvl - 1]
 
@@ -222,6 +304,7 @@ const movement = (event) => {
 
 }
 
+randomMaze()
 // add event listener on body, each time you press a key
 document.body.addEventListener("keydown", movement)
 
