@@ -3,6 +3,7 @@ const container = document.querySelector("main")
 container.style = 'display: flex;width: 100%;height: 100%;flex-wrap: wrap;'
 document.body.style = 'margin:0; width:100vw; height:100vh'
 
+
 //Creating a random pattern for the maze
 const randomMaze = () => {
     // Randomize size and setting parametre for possible slabs
@@ -19,7 +20,6 @@ const randomMaze = () => {
             randomLevel[i][j] = 0
         }
     }
-    console.log(randomLevel)
 
     // setting a start
     let x = Math.floor(Math.random() * height)
@@ -29,18 +29,32 @@ const randomMaze = () => {
 
     // setting the path from the start
     // how long should be the main path : 
-    let pathSize = Math.floor(Math.random() * (x + y) / 3) + (x + y) / 10
-    console.log(pathSize)
+    let pathSize = Math.floor(Math.random() * (width + height)*1/2 + (width + height) / 10)
+    console.log("pathSize="+pathSize)
+
+    // init the case where you were / are / will be 
+    // previous = slab you are
+    // TwoBefore = slab you where
+    // X = slab you will be 
     let previousX = 0
     let previousY = 0
+
+    //Looping on the pathSize
     for (let i = 0; i < pathSize; i++) {
+
+        //update position
         let TwoBeforeX = previousX
         let TwoBeforeY = previousY
         previousX = x
-        previouxY = y
-        // console.log(x)
+        previousY = y
+
+        // random vertical ou horizontal
         if (Math.random() < 0.5) {
-            if (TwoBeforeX - previousX < 0 && previousX + 1 <= width) {
+            console.log("thisisX")
+
+            //check previous position and walls and increment new position
+            // if (TwoBeforeX - previousX < 0 && previousX + 1 <= width) {
+                if (previousX + 1 <= width) {
                 x = previousX + 1
             }
             else if (previousX - 1 >= 0) {
@@ -57,30 +71,60 @@ const randomMaze = () => {
                 y = TwoBeforeY
             }
         }
+
+        // random vertical ou horizontal
         if (Math.random() > 0.5) {
-            if (TwoBeforeY - previousY < 0 && previousY + 1 <= height) {
+            console.log("thisisY")
+            console.log(TwoBeforeY, previousY, y, height)
+
+            //check previous position and walls and increment new position
+            // if (TwoBeforeY - previousY < 0 && previousY + 1 <= height) {
+                if (previousY + 1 <= height) {
+                console.log("thisisY++")
                 y = previousY + 1
             }
             else if (previousY - 1 >= 0) {
+                console.log("thisisY--")
                 y = previousY - 1
             }
             else if (TwoBeforeX - previousX < 0 && previousX + 1 <= width) {
+                console.log("thisisY->X")
                 x = previousX + 1
             }
             else if (previousX - 1 >= 0) {
+                console.log("thisisY->X")
                 x = previousX - 1
             }
             else {
+                console.log("thisisSHIT")
                 x = TwoBeforeX
                 y = TwoBeforeY
             }
         }
-    console.log(x)
-    console.log(y)
-    randomLevel[x][y] = "*"
-    
+    console.log("X:"+x+" Y:"+y)
+
+    //check if end + update randomLevel with a END
+    if(i==pathSize-1){
+    randomLevel[x][y] = "T"
     }
-    // console.log(randomLevel)
+
+    // Update randomLevel with a path
+    else {
+        randomLevel[x][y] = "."
+    }
+    }
+
+    //filling the rest of the maze
+    for (let i=0; i<randomLevel.length; i++){
+        for (let j=0; j<randomLevel[i].length;j++){
+            if (randomLevel[i][j]==""){
+                randomLevel[i][j]="*"
+            }
+        }
+
+    }
+    
+    return randomLevel
 }
     
     
@@ -150,7 +194,9 @@ const mazeSize = () => {
 // Loop on each array inside [actualLevel] Creating one Div class "Line" 
 // number of line=mazeHeight and number of line.children=mazeWidth
 const creationMaze = () => {
-    actualLevel = LEVEL[lvl - 1]
+    // actualLevel = LEVEL[lvl - 1]
+    actualLevel=randomMaze()
+    console.log(actualLevel)
     mazeSize()
     for (let i = 0; i < actualLevel.length; i++) {
         const createLine = document.createElement("div")
@@ -159,7 +205,7 @@ const creationMaze = () => {
         line.style = `height:${heightCase}vh; width:100%; display:flex`
 
         // calling what's inside the array [i]   
-        const arrayoflevel = actualLevel[i]
+        let arrayoflevel = actualLevel[i]
 
         // loop on the array inside the array[i] and creating one Div class "wall", "Path", "Start" or "End"
         // for each value
@@ -304,7 +350,6 @@ const movement = (event) => {
 
 }
 
-randomMaze()
 // add event listener on body, each time you press a key
 document.body.addEventListener("keydown", movement)
 
