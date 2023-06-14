@@ -1,7 +1,7 @@
 // defining container and styling it
 const container = document.querySelector("main")
-container.style = 'display: flex;width: 100%;height: 100%;flex-wrap: wrap;'
-document.body.style = 'margin:0; width:100vw; height:100vh'
+container.style = 'display: flex;width: 100%;flex-wrap: wrap;'
+document.body.style = 'margin:0; width:100vw;'
 
 //creating sliders parametre maze
 const sliderHeight = document.createElement("input")
@@ -10,20 +10,23 @@ const sliderPath = document.createElement("input")
 
 sliderHeight.type = "range"
 sliderHeight.min = 4
-sliderHeight.max = 200
+sliderHeight.max = 150
+sliderHeight.defaultValue = "50"
 sliderHeight.id = "height"
 // sliderHeight.addEventListener("change",creationMaze )
 
 sliderWidth.type = "range"
 sliderWidth.min = 4
-sliderWidth.max = 200
+sliderWidth.max = 150
+sliderWidth.defaultValue = "50"
 sliderWidth.id = "width"
 // sliderWidth.addEventListener("change",creationMaze )
 
 
 sliderPath.type = "range"
 sliderPath.min = 2
-sliderPath.max = 200
+sliderPath.max = 400
+sliderPath.defaultValue = "100"
 sliderPath.id = "path"
 // sliderPath.addEventListener("change",creationMaze )
 
@@ -66,10 +69,11 @@ const randomMaze = () => {
     // setting the path from the start
     // how long should be the main path : 
     let pathSize = Math.floor(Math.random() * (width + height) * 2 + (width + height))
-    console.log("pathSize=" + pathSize)
+
     if (document.getElementById("path") != null) {
         pathSize = document.getElementById("path").value
     }
+    console.log("pathSize=" + pathSize)
     // init the case where you were / are / will be 
     // previous = slab you are
     // TwoBefore = slab you where
@@ -88,202 +92,437 @@ const randomMaze = () => {
 
         // random vertical ou horizontal
         if (Math.random() < 0.5) {
-            console.log("thisisX")
-            console.log(previousX, previousY, randomLevel, width)
-            //check previous position and walls and increment new position
-            // if (TwoBeforeX - previousX < 0 && previousX + 1 <= width) {
-            if (previousX + 1 < height && randomLevel[previousX + 1][previousY] == "") {
-                x = previousX + 1
-            }
-            else if (previousX - 1 >= 0 && randomLevel[previousX - 1][previousY] == "") {
-                x = previousX - 1
-            }
-            else if (previousY + 1 <= width && randomLevel[previousX][previousY + 1] == "") {
-                y = previousY + 1
-            }
-            else if (previousY - 1 <= width && randomLevel[previousX][previousY + 1] == "") {
-                y = previousY - 1
+            if (Math.random() < 0.65) {
+                //check previous position and walls and increment new position
+                // if (TwoBeforeX - previousX < 0 && previousX + 1 <= width) {
+                if (previousX + 1 < height && randomLevel[previousX + 1][previousY] == "") {
+                    x = previousX + 1
+                }
+                else if (previousX - 1 >= 0 && randomLevel[previousX - 1][previousY] == "") {
+                    x = previousX - 1
+                }
+                else if (previousY + 1 <= width && randomLevel[previousX][previousY + 1] == "") {
+                    y = previousY + 1
+                }
+                else if (previousY - 1 <= width && randomLevel[previousX][previousY + 1] == "") {
+                    y = previousY - 1
+                }
+                else {
+                    x = TwoBeforeX
+                    y = TwoBeforeY
+                }
             }
             else {
-                x = TwoBeforeX
-                y = TwoBeforeY
+                //check previous position and walls and increment new position
+                // if (TwoBeforeX - previousX < 0 && previousX + 1 <= width) {
+                if (previousX - 1 >= 0 && randomLevel[previousX - 1][previousY] == "") {
+                    x = previousX - 1
+                }
+                else if (previousX + 1 < height && randomLevel[previousX + 1][previousY] == "") {
+                    x = previousX + 1
+                }
+                else if (previousY + 1 <= width && randomLevel[previousX][previousY + 1] == "") {
+                    y = previousY + 1
+                }
+                else if (previousY - 1 <= width && randomLevel[previousX][previousY + 1] == "") {
+                    y = previousY - 1
+                }
+                else {
+                    x = TwoBeforeX
+                    y = TwoBeforeY
+                }
             }
         }
 
         // random vertical ou horizontal
         else {
-            console.log("thisisY")
-            console.log(previousY, y, width, x)
+            if (Math.random() < 0.8) {
+                //check previous position and walls and increment new position
+                // if (TwoBeforeY - previousY < 0 && previousY + 1 <= height) {
+                if (previousY + 1 <= width && randomLevel[previousX][previousY + 1] == "") {
 
-            //check previous position and walls and increment new position
-            // if (TwoBeforeY - previousY < 0 && previousY + 1 <= height) {
-            if (previousY + 1 <= width && randomLevel[previousX][previousY + 1] == "") {
-                console.log("thisisY++")
-                y = previousY + 1
-            }
-            else if (previousY - 1 >= 0 && randomLevel[previousX][previousY - 1] == "") {
-                console.log("thisisY--")
-                y = previousY - 1
-            }
-            else if (previousX + 1 < height && randomLevel[previousX + 1][previousY] == "") {
-                console.log("thisisY->X")
-                x = previousX + 1
-            }
-            else if (previousX - 1 >= 0 && randomLevel[previousX - 1][previousY] == "") {
-                console.log("thisisY->X")
-                x = previousX - 1
-            }
-            else {
-                console.log("thisisSHIT")
-                x = TwoBeforeX
-                y = TwoBeforeY
-            }
-        }
-        console.log("X:" + x + " Y:" + y)
-
-        //check if end + update randomLevel with a END
-        if (i == pathSize - 1) {
-            randomLevel[x][y] = "T"
-        }
-
-        // Update randomLevel with a path
-        else {
-            randomLevel[x][y] = "."
-        }
-
-        //////
-        //generate alternative paths
-        if (Math.random() < (1 / pathSize) * 2) {
-            console.log("ALTERNATIVE PATH PATH PATH")
-            let pathSizeB = Math.floor(Math.random() * (width + height) + (width + height))
-            // init the case where you were / are / will be 
-            // previous = slab you are
-            // TwoBefore = slab you where
-            // X = slab you will be 
-            let previousW = previousX
-            let previousZ = previousY
-            let w = previousW
-            let z = previousZ
-
-            //Looping on the pathSize
-            for (let i = 0; i < pathSizeB; i++) {
-
-                //update position
-                let TwoBeforeW = previousW
-                let TwoBeforeZ = previousZ
-                previousW = w
-                previousZ = z
-
-                // random vertical ou horizontal
-                if (Math.random() < 0.5) {
-                    console.log("thisisX")
-                    console.log(previousW, previousZ, randomLevel, width)
-                    //check previous position and walls and increment new position
-                    // if (TwoBeforeX - previousW < 0 && previousW + 1 <= width) {
-                    if (Math.random() < 0.5) {
-                        if (previousW + 1 < height && randomLevel[previousW + 1][previousZ] == "") {
-                            w = previousW + 1
-                        }
-                        else if (previousW - 1 >= 0 && randomLevel[previousW - 1][previousZ] == "") {
-                            w = previousW - 1
-                        }
-                        else if (previousZ + 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
-                            z = previousZ + 1
-                        }
-                        else if (previousZ - 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
-                            z = previousZ - 1
-                        }
-                        else {
-                            w = TwoBeforeW
-                            z = TwoBeforeZ
-                        }
-                    }
-                    else {
-
-                        if (previousW - 1 >= 0 && randomLevel[previousW - 1][previousZ] == "") {
-                            w = previousW - 1
-                        }
-                        else if (previousW + 1 < height && randomLevel[previousW + 1][previousZ] == "") {
-                            w = previousW + 1
-                        }
-                        else if (previousZ + 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
-                            z = previousZ + 1
-                        }
-                        else if (previousZ - 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
-                            z = previousZ - 1
-                        }
-                        else {
-                            w = TwoBeforeW
-                            z = TwoBeforeZ
-                        }
-                    }
+                    y = previousY + 1
                 }
-                // random vertical ou horizontal
+                else if (previousY - 1 >= 0 && randomLevel[previousX][previousY - 1] == "") {
+
+                    y = previousY - 1
+                }
+                else if (previousX + 1 < height && randomLevel[previousX + 1][previousY] == "") {
+
+                    x = previousX + 1
+                }
+                else if (previousX - 1 >= 0 && randomLevel[previousX - 1][previousY] == "") {
+
+                    x = previousX - 1
+                }
                 else {
 
-                    console.log("thisisY")
-                    console.log(previousY, y, width, x)
-
-                    //check previous position and walls and increment new position
-                    // if (TwoBeforeY - previousY < 0 && previousY + 1 <= height) {
-                    if (Math.random() < 0.5) {
-                        if (previousZ + 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
-                            console.log("thisisY++")
-                            z = previousZ + 1
-                        }
-                        else if (previousZ - 1 >= 0 && randomLevel[previousW][previousZ - 1] == "") {
-                            console.log("thisisZ--")
-                            z = previousZ - 1
-                        }
-                        else if (previousW + 1 < height && randomLevel[previousW + 1][previousZ] == "") {
-                            console.log("thisisZ->X")
-                            w = previousW + 1
-                        }
-                        else if (previousW - 1 >= 0 && randomLevel[previousW - 1][previousZ] == "") {
-                            console.log("thisisZ->w")
-                            w = previousW - 1
-                        }
-                        else {
-                            console.log("thisisSHIT")
-                            w = TwoBeforeW
-                            z = TwoBeforeZ
-                        }
-                    }
-                    else {
-                        if (previousZ - 1 >= 0 && randomLevel[previousW][previousZ - 1] == "") {
-                            console.log("thisisZ--")
-                            z = previousZ - 1
-                        }
-                        else if (previousZ + 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
-                            console.log("thisisY++")
-                            z = previousZ + 1
-                        }
-                        else if (previousZ - 1 >= 0 && randomLevel[previousW][previousZ - 1] == "") {
-                            console.log("thisisZ--")
-                            z = previousZ - 1
-                        }
-                        else if (previousW + 1 < height && randomLevel[previousW + 1][previousZ] == "") {
-                            console.log("thisisZ->X")
-                            w = previousW + 1
-                        }
-                        else if (previousW - 1 >= 0 && randomLevel[previousW - 1][previousZ] == "") {
-                            console.log("thisisZ->w")
-                            w = previousW - 1
-                        }
-                        else {
-                            console.log("thisisSHIT")
-                            w = TwoBeforeW
-                            z = TwoBeforeZ
-                        }
-                    }
+                    x = TwoBeforeX
+                    y = TwoBeforeY
                 }
-                console.log("X:" + x + " Y:" + y)
+            }
+            else {
+                //check previous position and walls and increment new position
+                // if (TwoBeforeY - previousY < 0 && previousY + 1 <= height) {
+                if (previousY - 1 >= 0 && randomLevel[previousX][previousY - 1] == "") {
 
-                randomLevel[w][z] = "."
+                    y = previousY - 1
+                }
+                else if (previousY + 1 <= width && randomLevel[previousX][previousY + 1] == "") {
 
+                    y = previousY + 1
+                }
+                else if (previousX + 1 < height && randomLevel[previousX + 1][previousY] == "") {
+
+                    x = previousX + 1
+                }
+                else if (previousX - 1 >= 0 && randomLevel[previousX - 1][previousY] == "") {
+
+                    x = previousX - 1
+                }
+                else {
+
+                    x = TwoBeforeX
+                    y = TwoBeforeY
+                }
+            }
+        }
+
+        randomLevel[x][y] = "."
+        // }
+
+        // //////
+        // //generate alternative paths
+        // if (Math.random() < (1 / pathSize) * 15) {
+        //     console.log("ALTERNATIVE PATH PATH PATH")
+        //     let pathSizeB = Math.floor(Math.random() * (width + height) + (width + height))
+        //     // init the case where you were / are / will be 
+        //     // previous = slab you are
+        //     // TwoBefore = slab you where
+        //     // X = slab you will be 
+        //     let previousW = previousX
+        //     let previousZ = previousY
+        //     let w = previousW
+        //     let z = previousZ
+
+        //     //Looping on the pathSize
+        //     for (let i = 0; i < pathSizeB; i++) {
+
+        //         //update position
+        //         let TwoBeforeW = previousW
+        //         let TwoBeforeZ = previousZ
+        //         previousW = w
+        //         previousZ = z
+
+        //         // random vertical ou horizontal
+        //         if (Math.random() < 0.5) {
+        //             console.log("thisisX")
+        //             console.log(previousW, previousZ, randomLevel, width)
+        //             //check previous position and walls and increment new position
+        //             // if (TwoBeforeX - previousW < 0 && previousW + 1 <= width) {
+        //             if (Math.random() < 0.5) {
+        //                 if (previousW + 1 < height && randomLevel[previousW + 1][previousZ] == "") {
+        //                     w = previousW + 1
+        //                 }
+        //                 else if (previousW - 1 >= 0 && randomLevel[previousW - 1][previousZ] == "") {
+        //                     w = previousW - 1
+        //                 }
+        //                 else if (previousZ + 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
+        //                     z = previousZ + 1
+        //                 }
+        //                 else if (previousZ - 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
+        //                     z = previousZ - 1
+        //                 }
+        //                 else {
+        //                     w = TwoBeforeW
+        //                     z = TwoBeforeZ
+        //                 }
+        //             }
+        //             else {
+
+        //                 if (previousW - 1 >= 0 && randomLevel[previousW - 1][previousZ] == "") {
+        //                     w = previousW - 1
+        //                 }
+        //                 else if (previousW + 1 < height && randomLevel[previousW + 1][previousZ] == "") {
+        //                     w = previousW + 1
+        //                 }
+        //                 else if (previousZ + 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
+        //                     z = previousZ + 1
+        //                 }
+        //                 else if (previousZ - 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
+        //                     z = previousZ - 1
+        //                 }
+        //                 else {
+        //                     w = TwoBeforeW
+        //                     z = TwoBeforeZ
+        //                 }
+        //             }
+        //         }
+        //         // random vertical ou horizontal
+        //         else {
+
+        //             console.log("thisisY")
+        //             console.log(previousY, y, width, x)
+
+        //             //check previous position and walls and increment new position
+        //             // if (TwoBeforeY - previousY < 0 && previousY + 1 <= height) {
+        //             if (Math.random() < 0.5) {
+        //                 if (previousZ + 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
+        //                     console.log("thisisY++")
+        //                     z = previousZ + 1
+        //                 }
+        //                 else if (previousZ - 1 >= 0 && randomLevel[previousW][previousZ - 1] == "") {
+        //                     console.log("thisisZ--")
+        //                     z = previousZ - 1
+        //                 }
+        //                 else if (previousW + 1 < height && randomLevel[previousW + 1][previousZ] == "") {
+        //                     console.log("thisisZ->X")
+        //                     w = previousW + 1
+        //                 }
+        //                 else if (previousW - 1 >= 0 && randomLevel[previousW - 1][previousZ] == "") {
+        //                     console.log("thisisZ->w")
+        //                     w = previousW - 1
+        //                 }
+        //                 else {
+        //                     console.log("thisisSHIT")
+        //                     w = TwoBeforeW
+        //                     z = TwoBeforeZ
+        //                 }
+        //             }
+        //             else {
+        //                 if (previousZ - 1 >= 0 && randomLevel[previousW][previousZ - 1] == "") {
+        //                     console.log("thisisZ--")
+        //                     z = previousZ - 1
+        //                 }
+        //                 else if (previousZ + 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
+        //                     console.log("thisisY++")
+        //                     z = previousZ + 1
+        //                 }
+        //                 else if (previousZ - 1 >= 0 && randomLevel[previousW][previousZ - 1] == "") {
+        //                     console.log("thisisZ--")
+        //                     z = previousZ - 1
+        //                 }
+        //                 else if (previousW + 1 < height && randomLevel[previousW + 1][previousZ] == "") {
+        //                     console.log("thisisZ->X")
+        //                     w = previousW + 1
+        //                 }
+        //                 else if (previousW - 1 >= 0 && randomLevel[previousW - 1][previousZ] == "") {
+        //                     console.log("thisisZ->w")
+        //                     w = previousW - 1
+        //                 }
+        //                 else {
+        //                     console.log("thisisSHIT")
+        //                     w = TwoBeforeW
+        //                     z = TwoBeforeZ
+        //                 }
+        //             }
+        //         }
+        //     console.log("X:" + x + " Y:" + y)
+
+        //     randomLevel[w][z] = "."
+
+        // }
+        // }
+    }
+    for (let i = 0; i < randomLevel.length; i++) {
+        console.log("alternative path row" + i)
+        console.log(randomLevel.length)
+        for (let j = 0; j < randomLevel[0].length; j++) {
+            console.log("analye cellule")
+            if (randomLevel[i][j] == "." && Math.random() < (0.1)) {
+                console.log("ALTERNATIVE PATH PATH PATH" + i + "" + j)
+                let pathSizeB = Math.floor(Math.random() * (pathSize) / 3)
+                console.log("PathSizeB" + pathSizeB)
+                // init the case where you were / are / will be 
+                // previous = slab you are
+                // TwoBefore = slab you where
+                // X = slab you will be 
+                let previousW = i
+                let previousZ = j
+                let w = previousW
+                let z = previousZ
+
+                //Looping on the pathSize
+                for (let k = 0; k < pathSizeB; k++) {
+
+                    //update position
+                    let TwoBeforeW = previousW
+                    let TwoBeforeZ = previousZ
+                    previousW = w
+                    previousZ = z
+
+                    // random vertical ou horizontal
+                    if (i > (randomLevel.length/2)) {
+
+                        if (Math.random() < 0.5) {
+                            if (previousW - 1 >= 0 && randomLevel[previousW - 1][previousZ] == "") {
+                                w = previousW - 1
+                            }
+                            else if (previousW + 1 < height && randomLevel[previousW + 1][previousZ] == "") {
+                                w = previousW + 1
+                            }
+                            else if (previousZ + 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
+                                z = previousZ + 1
+                            }
+                            else if (previousZ - 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
+                                z = previousZ - 1
+                            }
+                            else {
+                                w = TwoBeforeW
+                                z = TwoBeforeZ
+                            }
+                        }
+                        else {
+                            if (previousZ + 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
+
+                                z = previousZ + 1
+                            }
+                            else if (previousZ - 1 >= 0 && randomLevel[previousW][previousZ - 1] == "") {
+
+                                z = previousZ - 1
+                            }
+                            else if (previousW + 1 < height && randomLevel[previousW + 1][previousZ] == "") {
+
+                                w = previousW + 1
+                            }
+                            else if (previousW - 1 >= 0 && randomLevel[previousW - 1][previousZ] == "") {
+
+                                w = previousW - 1
+                            }
+                            else {
+
+                                w = TwoBeforeW
+                                z = TwoBeforeZ
+                            }
+
+                        }
+                    }
+
+
+
+                    else if (Math.random() < 0.5) {
+
+                        //check previous position and walls and increment new position
+
+                        if (Math.random() < 0.5) {
+                            if (previousW + 1 < height && randomLevel[previousW + 1][previousZ] == "") {
+                                w = previousW + 1
+                            }
+                            else if (previousW - 1 >= 0 && randomLevel[previousW - 1][previousZ] == "") {
+                                w = previousW - 1
+                            }
+                            else if (previousZ + 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
+                                z = previousZ + 1
+                            }
+                            else if (previousZ - 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
+                                z = previousZ - 1
+                            }
+                            else {
+                                w = TwoBeforeW
+                                z = TwoBeforeZ
+                            }
+                        }
+                        else {
+
+                            if (previousW - 1 >= 0 && randomLevel[previousW - 1][previousZ] == "") {
+                                w = previousW - 1
+                            }
+                            else if (previousW + 1 < height && randomLevel[previousW + 1][previousZ] == "") {
+                                w = previousW + 1
+                            }
+                            else if (previousZ + 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
+                                z = previousZ + 1
+                            }
+                            else if (previousZ - 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
+                                z = previousZ - 1
+                            }
+                            else {
+                                w = TwoBeforeW
+                                z = TwoBeforeZ
+                            }
+                        }
+                    }
+                    // random vertical ou horizontal
+                    else {
+
+                        //check previous position and walls and increment new position
+                        // if (TwoBeforeY - previousY < 0 && previousY + 1 <= height) {
+                        if (Math.random() < 0.5) {
+                            if (previousZ + 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
+
+                                z = previousZ + 1
+                            }
+                            else if (previousZ - 1 >= 0 && randomLevel[previousW][previousZ - 1] == "") {
+
+                                z = previousZ - 1
+                            }
+                            else if (previousW + 1 < height && randomLevel[previousW + 1][previousZ] == "") {
+
+                                w = previousW + 1
+                            }
+                            else if (previousW - 1 >= 0 && randomLevel[previousW - 1][previousZ] == "") {
+
+                                w = previousW - 1
+                            }
+                            else {
+
+                                w = TwoBeforeW
+                                z = TwoBeforeZ
+                            }
+                        }
+                        else {
+                            if (previousZ - 1 >= 0 && randomLevel[previousW][previousZ - 1] == "") {
+
+                                z = previousZ - 1
+                            }
+                            else if (previousZ + 1 <= width && randomLevel[previousW][previousZ + 1] == "") {
+
+                                z = previousZ + 1
+                            }
+                            else if (previousZ - 1 >= 0 && randomLevel[previousW][previousZ - 1] == "") {
+
+                                z = previousZ - 1
+                            }
+                            else if (previousW + 1 < height && randomLevel[previousW + 1][previousZ] == "") {
+
+                                w = previousW + 1
+                            }
+                            else if (previousW - 1 >= 0 && randomLevel[previousW - 1][previousZ] == "") {
+
+                                w = previousW - 1
+                            }
+                            else {
+
+                                w = TwoBeforeW
+                                z = TwoBeforeZ
+                            }
+                        }
+                    }
+                    randomLevel[w][z] = "."
+
+                }
+            }
+            else {
+                continue
+            }
+        }
+
+    }
+    // setting up end on the deeper point
+
+    loop1:
+    for (let i = randomLevel.length - 1; i >= 0; i--) {
+        for (let j = randomLevel[0].length - 1; j >= 0; j--) {
+            if (randomLevel[i][j] == ".") {
+                randomLevel[i][j] = "T"
+                break loop1
+            }
+            else {
+                continue
             }
         }
     }
+
     ///////////
     //filling the rest of the maze
     for (let i = 0; i < randomLevel.length; i++) {
@@ -346,7 +585,7 @@ const LEVEL = [
 ]
 // const wich lvl am I loading + initialising height and width
 let lvl = 1
-let actualLevel =[]
+let actualLevel = []
 
 let heightCase = 1
 let widthCase = 1
@@ -377,7 +616,7 @@ const creationMaze = () => {
         const createLine = document.createElement("div")
         const line = container.appendChild(createLine)
         line.className = "line"
-        line.style = `height:${heightCase}vh; width:100%; display:flex`
+        line.style = `height:${widthCase}vw; width:100%; display:flex`
 
         // calling what's inside the array [i]   
         let arrayoflevel = actualLevel[i]
@@ -391,7 +630,7 @@ const creationMaze = () => {
                     const wall = line.appendChild(createWall)
                     wall.className = 'wall'
                     wall.id = `${i}/${a}`
-                    wall.style = `height: 100%;width:${widthCase}vw; background-color:black`
+                    wall.style = `height: 100%;width:${widthCase}vw; background-image:url("assets/Stone_(texture)_JE5_BE3.webp");background-size:cover;-webkit-appearance:none;-moz-appearance:none;-ms-appearance:none;-o-appearance:none;appearance:none;`
                     break
                 case '.':
                     const createPath = document.createElement("input")
@@ -399,7 +638,7 @@ const creationMaze = () => {
                     path.id = `${i}/${a}`
                     path.type = "checkbox"
                     path.className = 'path'
-                    path.style = `margin: 0; padding:0;height: 100%;width:${widthCase}vw; background-color:white`
+                    path.style = `margin: 0; padding:0;height: 100%;width:${widthCase}vw; background-image:url("assets/Coarse_Dirt_(texture)_JE1_BE1.webp");background-size:cover;-webkit-appearance:none;-moz-appearance:none;-ms-appearance:none;-o-appearance:none;appearance:none;`
                     break
                 case 'S':
                     const createStart = document.createElement("input")
@@ -408,7 +647,7 @@ const creationMaze = () => {
                     start.className = 'start'
                     start.type = "checkbox"
                     start.checked = "true"
-                    start.style = `margin: 0; padding:0;height: 100%;width:${widthCase}vw; background-color:red;-webkit-appearance:none;-moz-appearance:none;-ms-appearance:none;-o-appearance:none;appearance:none;`
+                    start.style = `margin: 0; padding:0;height: 100%;width:${widthCase}vw; background-color:red;-webkit-appearance:none;-moz-appearance:none;-ms-appearance:none;-o-appearance:none;appearance:none;background-image:url("assets/Nouveau projet.webp"); background-size:cover`
                     break
                 case 'T':
                     const createEnd = document.createElement("input")
@@ -416,12 +655,12 @@ const creationMaze = () => {
                     end.id = `${i}/${a}`
                     end.className = 'end'
                     end.type = "checkbox"
-                    end.style = `margin: 0; padding:0;height: 100%;width:${widthCase}vw; background-color:yellow;-webkit-appearance:none;-moz-appearance:none;-ms-appearance:none;-o-appearance:none;appearance:none;`
+                    end.style = `margin: 0; padding:0;height: 100%;width:${widthCase}vw; background-color:yellow;-webkit-appearance:none;-moz-appearance:none;-ms-appearance:none;-o-appearance:none;appearance:none;background-image:url("assets/end.png"); background-size:cover`
                     break
             }
         }
     }
-    
+
 }
 
 creationMaze()
@@ -431,7 +670,6 @@ creationMaze()
 // the box in the direction you press is an input.
 // if so, dechecked previous box, and check next one, otherwise nothing happend.
 const movement = (event) => {
-      
 
     //retrieving ID of previous box
     const previous = document.querySelector("input:checked")
@@ -442,16 +680,17 @@ const movement = (event) => {
     const previousLine = IdPrevious.slice(0, selector)
     const previousBox = IdPrevious.slice(selector + 1)
 
-    
+    previous.style.backgroundImage = 'url("assets/Coarse_Dirt_(texture)_JE1_BE1.webp")'
     switch (event.key) {
         case 'ArrowUp':
+            event.preventDefault()
             // define the ID of the new box to check
             const newIdUp = parseInt(previousLine) - 1 + "/" + previousBox
 
-            console.log("CECI EST MA NOUVELLE ID"+newIdUp)
+            console.log("CECI EST MA NOUVELLE ID" + newIdUp)
             console.log(document.getElementById(newIdUp).className)
             // uncheck previous input and check new input
-            if (document.getElementById(newIdUp) != null && document.getElementById(newIdUp).className !="wall") {
+            if (document.getElementById(newIdUp) != null && document.getElementById(newIdUp).className != "wall") {
                 previous.checked = false
                 document.getElementById(newIdUp).checked = true
             }
@@ -460,12 +699,13 @@ const movement = (event) => {
             }
             break
         case 'ArrowDown':
+            event.preventDefault()
             // define the ID of the new box to check
             const newIdDown = (parseInt(previousLine) + parseInt(1)) + "/" + previousBox
 
 
             // uncheck previous input and check new input
-            if (document.getElementById(newIdDown) != null && document.getElementById(newIdDown).className !="wall") {
+            if (document.getElementById(newIdDown) != null && document.getElementById(newIdDown).className != "wall") {
                 previous.checked = false
                 document.getElementById(newIdDown).checked = true
             }
@@ -474,12 +714,13 @@ const movement = (event) => {
             }
             break
         case 'ArrowRight':
+            event.preventDefault()
             // define the ID of the new box to check
             const newIdRight = previousLine + "/" + (parseInt(previousBox) + parseInt(1))
 
 
             // uncheck previous input and check new input
-            if (document.getElementById(newIdRight) != null && document.getElementById(newIdRight).className !="wall") {
+            if (document.getElementById(newIdRight) != null && document.getElementById(newIdRight).className != "wall") {
                 console.log(newIdRight)
                 previous.checked = false
                 document.getElementById(newIdRight).checked = true
@@ -489,11 +730,12 @@ const movement = (event) => {
             }
             break
         case 'ArrowLeft':
+            event.preventDefault()
             // define the ID of the new box to check
             const newIdLeft = previousLine + "/" + (parseInt(previousBox) - 1)
 
             // uncheck previous input and check new input
-            if (document.getElementById(newIdLeft) != null && document.getElementById(newIdLeft).className !="wall") {
+            if (document.getElementById(newIdLeft) != null && document.getElementById(newIdLeft).className != "wall") {
                 previous.checked = false
                 document.getElementById(newIdLeft).checked = true
             }
@@ -503,7 +745,52 @@ const movement = (event) => {
             break
 
     }
+    // styling new position
+    actualpath = document.querySelector("input:checked")
+    actualpath.style.backgroundImage = 'url("assets/Nouveau projet.webp")'
 
+    // //managing camera
+    actualpath.scrollIntoView({
+        behavior: 'auto',
+        block: 'center',
+        inline: 'center'
+    })
+
+    //Hidding all divs
+    for (let i = 0; i < actualLevel.length; i++) {
+        for (let j = 0; j < actualLevel[0].length; j++) {
+            let current = document.getElementById(i + "/" + j)
+            current.style.visibility = "hidden"
+            console.log("CACHE-CACHE")
+        }
+    }
+
+    //retrieving ID of actual box
+    let actual = document.querySelector("input:checked")
+    const Idactual = actual.id
+
+    // treating ID so I can select next box
+    selector = Idactual.indexOf("/")
+    let actualLine = Idactual.slice(0, selector)
+    let actualBox = Idactual.slice(selector + 1)
+    console.log(actualLine)
+    console.log(actualBox)
+
+    //showing slab neraby far away
+
+
+    for (let i = -2; i < 3; i++) {
+        for (let j = -2; j < 3; j++) {
+            let NearbyId = (parseInt(actualLine) + i) + "/" + (parseInt(actualBox) + j)
+            console.log(NearbyId)
+            if (document.getElementById(NearbyId) != null) {
+                document.getElementById(NearbyId).style.visibility = "visible"
+            }
+            else {
+                continue
+            }
+        }
+    }
     //Display won message when arrived
 
     const end = document.getElementsByClassName("end")
@@ -526,43 +813,6 @@ const movement = (event) => {
         console.log("not yet")
 
     }
-    //hidden all children
-
-    for (let i=0; i<actualLevel.length;i++){
-        for (let j=0;j<actualLevel[0].length;j++){
-        let current=document.getElementById(i+"/"+j)
-        current.style.visibility="hidden"
-        console.log("CACHE-CACHE")
-    }
-}
-
-       //retrieving ID of actual box
-       let actual = document.querySelector("input:checked")
-       const Idactual = actual.id
-   
-       // treating ID so I can select next box
-       selector = Idactual.indexOf("/")
-       let actualLine = Idactual.slice(0, selector)
-       let actualBox = Idactual.slice(selector + 1)
-       console.log(actualLine)
-       console.log(actualBox)
-
-    //showing slab neraby far away
- 
-
-for (let i=-2; i<3;i++){
-    for (let j=-2;j<3;j++){
-        let NearbyId = (parseInt(actualLine)+i) + "/" + (parseInt(actualBox) +j)
-        console.log(NearbyId)
-        if (document.getElementById(NearbyId)!=null){
-        document.getElementById(NearbyId).style.visibility="visible"
-        }
-        else {
-            continue
-        }
-    }
-}
-
 }
 
 // add event listener on body, each time you press a key
