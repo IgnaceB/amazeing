@@ -598,6 +598,7 @@ const mazeSize = () => {
     console.log(mazeHeight)
     heightCase = 100 / mazeHeight
     widthCase = 100 / mazeWidth
+    widthCase=4
 }
 
 
@@ -616,7 +617,7 @@ const creationMaze = () => {
         const createLine = document.createElement("div")
         const line = container.appendChild(createLine)
         line.className = "line"
-        line.style = `height:${widthCase}vw; width:100%; display:flex`
+        line.style = `height:${widthCase}vw;  display:flex`
 
         // calling what's inside the array [i]   
         let arrayoflevel = actualLevel[i]
