@@ -685,7 +685,7 @@ const moveEnemy = () => {
                     }
                     break
                 case '+x':
-                    if (element.IdActual[0] < element.IdOrigin[1] + 3) {
+                    if (element.IdActual[1] < element.IdOrigin[1] + 3) {
                         element.Idsecurity = element.IdActual
                         newID = element.IdActual[1] + 1
                         element.IdActual = [element.IdActual[0], newID]
