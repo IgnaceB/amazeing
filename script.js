@@ -3,6 +3,7 @@ const container = document.querySelector("main")
 container.style = 'display: flex;width: 100%;flex-wrap: wrap;'
 document.body.style = 'margin:0; width:100vw;'
 
+let initEnemy = []
 //creating sliders parametre maze
 const sliderHeight = document.createElement("input")
 const sliderWidth = document.createElement("input")
@@ -401,7 +402,7 @@ const randomMaze = () => {
 
             //spawning enemys check if path + random 
             else if (randomLevel[i][j] == "." && Math.random() < 0.1 && i > 0 && j > 0) {
-                enoughPlace=0
+                enoughPlace = 0
                 //check if there is enough place to spawn
 
                 for (let k = i - 1; k < i + 1; k++) {
@@ -409,7 +410,7 @@ const randomMaze = () => {
                     for (let l = j - 1; l < j + 1; l++) {
                         if (randomLevel[k][l] == ".") {
                             enoughPlace++
-                            console.log(enoughPlace)
+                        
                         }
                         else {
 
@@ -418,7 +419,7 @@ const randomMaze = () => {
                 }
                 if (enoughPlace == 4) {
                     randomLevel[i][j] = "e"
-                    console.log("FULLSPACEMAGGLE")
+                    
                 }
                 else { }
             }
@@ -520,11 +521,12 @@ const creationMaze = () => {
         for (let a = 0; a < arrayoflevel.length; a++) {
             switch (arrayoflevel[a]) {
                 case 'e': console.log("ENEMY")
-                const createEnemy = document.createElement("div")
+                    const createEnemy = document.createElement("input")
                     const enemy = line.appendChild(createEnemy)
+                    enemy.type = "checkbox"
                     enemy.className = 'enemy'
                     enemy.id = `${i}/${a}`
-                    enemy.style = `height: 100%;width:${widthCase}vw;background-color:blue;-webkit-appearance:none;-moz-appearance:none;-ms-appearance:none;-o-appearance:none;appearance:none;visibility:visible`
+                    enemy.style = `margin:0; padding:0;height: 100%;width:${widthCase}vw; background-image:url("assets/GLUON.webp");background-size:cover;-webkit-appearance:none;-moz-appearance:none;-ms-appearance:none;-o-appearance:none;appearance:none;`
                     break
                 case '*':
                     const createWall = document.createElement("div")
@@ -560,6 +562,30 @@ const creationMaze = () => {
                     break
             }
         }
+
+    }
+    //Creating object for each enemy
+    let enemy = {
+        nr: "",
+        IdOrigin: [],
+        IdActual: [],
+        Idsecurity: [],
+        PreviousDeplacement: ""
+    }
+    let a = 0
+
+    for (let i = 0; i < actualLevel.length; i++) {
+        for (let j = 0; j < actualLevel[i].length; j++) {
+            if (actualLevel[i][j] == "e") {
+
+                const newEnemy = Object.create(enemy)
+                newEnemy.nr = a
+                newEnemy.IdOrigin = [i, j]
+                newEnemy.IdActual = [i, j]
+                initEnemy.push(newEnemy)
+                a++
+            }
+        }
     }
 
 }
@@ -567,11 +593,214 @@ const creationMaze = () => {
 creationMaze()
 
 
+// Making ennemy move
+const moveEnemy = () => {
+    // let initEnemy = []
+    // let enemy = {
+    //     nr: "",
+    //     IdOrigin: [],
+    //     IdActual: [],
+    //     Idsecurity: [],
+    //     PreviousDeplacement: ""
+    // }
+    // let a = 0
+
+    // for (let i = 0; i < actualLevel.length; i++) {
+    //     for (let j = 0; j < actualLevel[i].length; j++) {
+    //         if (actualLevel[i][j] == "e") {
+
+    //             const newEnemy = Object.create(enemy)
+    //             newEnemy.nr = a
+    //             newEnemy.IdOrigin = [i, j]
+    //             newEnemy.IdOrigin = [i, j]
+    //             initEnemy.push(newEnemy)
+    //             a++
+    //         }
+    //     }
+    // }
+    console.log(initEnemy)
+
+    initEnemy.forEach(element => {
+        
+        if (element.IdActual[0] == element.IdOrigin[0] && element.IdActual[1] == element.IdOrigin[1]) {
+            if (Math.random() < 0.5) {
+                if (Math.random() < 0.5) {
+                    element.Idsecurity = element.IdOrigin
+                    newID = element.IdOrigin[0] + 1
+                    element.IdActual = [newID, element.IdOrigin[1]]
+                    element.PreviousDeplacement = "+y"
+                }
+                else {
+                    element.Idsecurity = element.IdOrigin
+                    newID = element.IdOrigin[0] - 1
+                    element.IdActual = [newID, element.IdOrigin[1]]
+                    element.PreviousDeplacement = "-y"
+
+                }
+            }
+            else {
+                if (Math.random < 0.5) {
+                    element.Idsecurity = element.IdOrigin
+                    newID = element.IdOrigin[1] + 1
+                    element.IdActual = [element.IdOrigin[0], newID]
+                    element.PreviousDeplacement = "+x"
+                }
+                else {
+                    element.Idsecurity = element.IdOrigin
+                    newID = element.IdOrigin[1] - 1
+                    element.IdActual = [element.IdOrigin[0], newID]
+                    element.PreviousDeplacement = "-x"
+                }
+            }
+        }
+        else {
+            console.log("CAFAITPLUSQUUN")
+            switch (element.PreviousDeplacement) {
+                case '+y':
+                    if (element.IdActual[0] < (element.IdOrigin[0] + 3)) {
+                        console.log(element.IdOrigin[0] + 3)
+                        element.Idsecurity = element.IdActual
+                        newID = element.IdActual[0] + 1
+                        element.IdActual = [newID, element.IdActual[1]]
+                        console.log("THIS IS THE PREVIOUS ID: "+element.Idsecurity+"THIS IS THE NEXT ID: "+element.IdActual+"THIS IS ORIGIN :"+element.IdOrigin)
+                    }
+                    else {
+                        element.Idsecurity = element.IdActual
+                        newID = element.IdActual[0] - 1
+                        element.IdActual = [newID, element.IdActual[1]]
+                        element.PreviousDeplacement = "-y"
+                    }
+                    break
+                case '-y':
+                    if (element.IdActual[0] > element.IdOrigin[0] - 3) {
+                        element.Idsecurity = element.IdActual
+                        newID = element.IdActual[0] - 1
+                        element.IdActual = [newID, element.IdActual[1]]
+                    }
+                    else {
+                        element.Idsecurity = element.IdActual
+                        newID = element.IdActual[0] + 1
+                        element.IdActual = [newID, element.IdActual[1]]
+                        element.PreviousDeplacement = "+y"
+                    }
+                    break
+                case '+x':
+                    if (element.IdActual[0] < element.IdOrigin[1] + 3) {
+                        element.Idsecurity = element.IdActual
+                        newID = element.IdActual[1] + 1
+                        element.IdActual = [element.IdActual[0], newID]
+
+                    }
+                    else {
+                        element.Idsecurity = element.IdActual
+                        newID = element.IdActual[1] - 1
+                        element.IdActual = [element.IdActual[0], newID]
+                        element.PreviousDeplacement = "-x"
+                    }
+                    break
+                case '-x':
+                    if (element.IdActual[0] > element.IdOrigin[1] - 3) {
+                        element.Idsecurity = element.IdActual
+                        newID = element.IdActual[1] - 1
+                        element.IdActual = [element.IdActual[0], newID]
+
+                    }
+                    else {
+                        element.Idsecurity = element.IdActual
+                        newID = element.IdActual[1] + 1
+                        element.IdActual = [element.IdActual[0], newID]
+                        element.PreviousDeplacement = "+x"
+                    }
+                    break
+            }
+        }
+        if (document.getElementById(element.IdActual[0] + "/" + element.IdActual[1]) != null) {
+            let newPosition = document.getElementById(element.IdActual[0] + "/" + element.IdActual[1])
+            let oldPosition = document.getElementById(element.Idsecurity[0] + "/" + element.Idsecurity[1])
+           
+            if (newPosition.className == "path") {
+                console.log("CA BOUUUUUUUGE"+element.IdOrigin)
+                newPosition.className = "enemy"
+                oldPosition.className = "path"
+                newPosition.style.backgroundImage = 'url("assets/GLUON.webp")'
+                oldPosition.style.backgroundImage = `url("assets/Coarse_Dirt_(texture)_JE1_BE1.webp")`
+            }
+            else {
+                element.IdActual[1] = element.Idsecurity[1]
+            element.IdActual[0] = element.Idsecurity[0]
+                switch (element.PreviousDeplacement) {
+                    case '+x':
+                        element.PreviousDeplacement = '-x'
+                        break
+                    case '-x':
+                        element.PreviousDeplacement = '+x'
+                        break
+                    case '+y':
+                        element.PreviousDeplacement = '-y'
+                        break
+                    case '-y':
+                        element.PreviousDeplacement = '+y'
+                        break
+                }
+                console.log(element)
+            }
+        }
+        else {element.IdActual[1] = element.Idsecurity[1]
+            element.IdActual[0] = element.Idsecurity[0]
+        switch (element.PreviousDeplacement) {
+            case '+x':
+                element.PreviousDeplacement = '-x'
+                break
+            case '-x':
+                element.PreviousDeplacement = '+x'
+                break
+            case '+y':
+                element.PreviousDeplacement = '-y'
+                break
+            case '-y':
+                element.PreviousDeplacement = '+y'
+                break
+        }
+        console.log(element)
+    }
+    }
+    );
+    //   for (let k=0;k<initEnemy.length;k++){
+    //     let absoluteEnemy=document.getElementById(initEnemy[k].enemy.IdOrigin[0]+"/"+initEnemy[k].enemy.IdOrigin[0])
+    //     // let actualEnemy=document.getElementsByClassName("enemy")
+    //     let newID
+    //   if (absoluteEnemy.className=="enemy"){
+    //      if (Math.random()<0.5){
+    //         if (Math.random()<0.5){
+    //             newID=initEnemy[k][0]+1+"/"+initEnemy[k][1]
+    //         }
+    //         else {
+    //             newID=initEnemy[k][0]-1+"/"+initEnemy[k][1]
+    //         }
+    //      }
+    //      else {
+    //         if (Math.random<0.5){
+    //             newID=initEnemy[k][0]+"/"+initEnemy[k][1]+1
+    //         }
+    //         else {
+    //             newID=initEnemy[k][0]+"/"+initEnemy[k][1]-1
+    //         }
+    //          }
+    //   }
+    //   else {
+    //     console.log(actualEnemy)
+    //   }
+    //   console.log(actualEnemy)
+    // }
+}
+
+
+
 // create the movement function, call the id of the previous selected box, and check if 
 // the box in the direction you press is an input.
 // if so, dechecked previous box, and check next one, otherwise nothing happend.
 const movement = (event) => {
-
+    moveEnemy()
     //retrieving ID of previous box
     const previous = document.querySelector("input:checked")
     const IdPrevious = previous.id
@@ -588,17 +817,16 @@ const movement = (event) => {
             // define the ID of the new box to check
             const newIdUp = parseInt(previousLine) - 1 + "/" + previousBox
 
-            console.log("CECI EST MA NOUVELLE ID" + newIdUp)
-            console.log(document.getElementById(newIdUp).className)
+         
             // uncheck previous input and check new input
-            if (document.getElementById(newIdUp) != null 
-            && document.getElementById(newIdUp).className != "wall"
-            && document.getElementById(newIdUp).className != "enemy") {
+            if (document.getElementById(newIdUp) != null
+                && document.getElementById(newIdUp).className != "wall"
+                && document.getElementById(newIdUp).className != "enemy") {
                 previous.checked = false
                 document.getElementById(newIdUp).checked = true
             }
-            else if(document.getElementById(newIdUp).className == "enemy") {
-                alert ("You died")
+            else if (document.getElementById(newIdUp).className == "enemy") {
+                alert("You died")
                 creationMaze()
             }
             else {
@@ -612,14 +840,14 @@ const movement = (event) => {
 
 
             // uncheck previous input and check new input
-            if (document.getElementById(newIdDown) != null 
-            && document.getElementById(newIdDown).className != "wall"
-            && document.getElementById(newIdDown).className != "enemy") {
+            if (document.getElementById(newIdDown) != null
+                && document.getElementById(newIdDown).className != "wall"
+                && document.getElementById(newIdDown).className != "enemy") {
                 previous.checked = false
                 document.getElementById(newIdDown).checked = true
             }
-            else if(document.getElementById(newIdDown).className == "enemy") {
-                alert ("You died")
+            else if (document.getElementById(newIdDown).className == "enemy") {
+                alert("You died")
                 creationMaze()
             }
             else {
@@ -633,15 +861,15 @@ const movement = (event) => {
 
 
             // uncheck previous input and check new input
-            if (document.getElementById(newIdRight) != null 
-            && document.getElementById(newIdRight).className != "wall"
-            && document.getElementById(newIdRight).className != "enemy") {
+            if (document.getElementById(newIdRight) != null
+                && document.getElementById(newIdRight).className != "wall"
+                && document.getElementById(newIdRight).className != "enemy") {
                 console.log(newIdRight)
                 previous.checked = false
                 document.getElementById(newIdRight).checked = true
             }
-            else if(document.getElementById(newIdRight).className == "enemy") {
-                alert ("You died")
+            else if (document.getElementById(newIdRight).className == "enemy") {
+                alert("You died")
                 creationMaze()
             }
             else {
@@ -654,14 +882,14 @@ const movement = (event) => {
             const newIdLeft = previousLine + "/" + (parseInt(previousBox) - 1)
 
             // uncheck previous input and check new input
-            if (document.getElementById(newIdLeft) != null 
-            && document.getElementById(newIdLeft).className != "wall" 
-            && document.getElementById(newIdLeft).className != "enemy") {
+            if (document.getElementById(newIdLeft) != null
+                && document.getElementById(newIdLeft).className != "wall"
+                && document.getElementById(newIdLeft).className != "enemy") {
                 previous.checked = false
                 document.getElementById(newIdLeft).checked = true
             }
-            else if(document.getElementById(newIdLeft).className == "enemy") {
-                alert ("You died")
+            else if (document.getElementById(newIdLeft).className == "enemy") {
+                alert("You died")
                 creationMaze()
             }
             else {
@@ -670,6 +898,7 @@ const movement = (event) => {
             break
 
     }
+    
     // styling new position
     actualpath = document.querySelector("input:checked")
     actualpath.style.backgroundImage = 'url("assets/Nouveau projet.webp")'
@@ -682,13 +911,13 @@ const movement = (event) => {
     })
 
     //Hidding all divs
-    for (let i = 0; i < actualLevel.length; i++) {
-        for (let j = 0; j < actualLevel[0].length; j++) {
-            let current = document.getElementById(i + "/" + j)
-            current.style.visibility = "hidden"
-            console.log("CACHE-CACHE")
-        }
-    }
+    // for (let i = 0; i < actualLevel.length; i++) {
+    //     for (let j = 0; j < actualLevel[0].length; j++) {
+    //         let current = document.getElementById(i + "/" + j)
+    //         current.style.visibility = "hidden"
+    //         console.log("CACHE-CACHE")
+    //     }
+    // }
 
     //retrieving ID of actual box
     let actual = document.querySelector("input:checked")
@@ -707,7 +936,7 @@ const movement = (event) => {
     for (let i = -2; i < 3; i++) {
         for (let j = -2; j < 3; j++) {
             let NearbyId = (parseInt(actualLine) + i) + "/" + (parseInt(actualBox) + j)
-            console.log(NearbyId)
+           
             if (document.getElementById(NearbyId) != null) {
                 document.getElementById(NearbyId).style.visibility = "visible"
             }
@@ -733,8 +962,9 @@ const movement = (event) => {
         // calling function creation new maze
         creationMaze()
     }
-    
+
 }
+
 
 // add event listener on body, each time you press a key
 document.body.addEventListener("keydown", movement)
