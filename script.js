@@ -526,7 +526,7 @@ const creationMaze = () => {
                     enemy.type = "checkbox"
                     enemy.className = 'enemy'
                     enemy.id = `${i}/${a}`
-                    enemy.style = `margin:0; padding:0;height: 100%;width:${widthCase}vw; background-image:url("assets/er_knight_set.png");background-size:cover;-webkit-appearance:none;-moz-appearance:none;-ms-appearance:none;-o-appearance:none;appearance:none;`
+                    enemy.style = `margin:0; padding:0;height: 100%;width:${widthCase}vw; background-image:url("assets/GLUON.webp");background-size:cover;-webkit-appearance:none;-moz-appearance:none;-ms-appearance:none;-o-appearance:none;appearance:none;`
                     break
                 case '*':
                     const createWall = document.createElement("div")
@@ -722,7 +722,7 @@ const moveEnemy = () => {
                 console.log("CA BOUUUUUUUGE"+element.IdOrigin)
                 newPosition.className = "enemy"
                 oldPosition.className = "path"
-                newPosition.style.backgroundImage = 'url("assets/er_knight_set.png")'
+                newPosition.style.backgroundImage = 'url("assets/GLUON.webp")'
                 oldPosition.style.backgroundImage = `url("assets/Coarse_Dirt_(texture)_JE1_BE1.webp")`
             }
             else {
