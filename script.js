@@ -1,7 +1,7 @@
 // defining container and styling it
 const container = document.querySelector("main")
 container.style = 'display: flex;width: 100%;flex-wrap: wrap;'
-document.body.style = 'margin:0; width:100vw;'
+document.body.style = 'margin:0; width:100vw;background-color:black;'
 
 let initEnemy = []
 //creating sliders parametre maze
@@ -765,33 +765,6 @@ const moveEnemy = () => {
     }
     }
     );
-    //   for (let k=0;k<initEnemy.length;k++){
-    //     let absoluteEnemy=document.getElementById(initEnemy[k].enemy.IdOrigin[0]+"/"+initEnemy[k].enemy.IdOrigin[0])
-    //     // let actualEnemy=document.getElementsByClassName("enemy")
-    //     let newID
-    //   if (absoluteEnemy.className=="enemy"){
-    //      if (Math.random()<0.5){
-    //         if (Math.random()<0.5){
-    //             newID=initEnemy[k][0]+1+"/"+initEnemy[k][1]
-    //         }
-    //         else {
-    //             newID=initEnemy[k][0]-1+"/"+initEnemy[k][1]
-    //         }
-    //      }
-    //      else {
-    //         if (Math.random<0.5){
-    //             newID=initEnemy[k][0]+"/"+initEnemy[k][1]+1
-    //         }
-    //         else {
-    //             newID=initEnemy[k][0]+"/"+initEnemy[k][1]-1
-    //         }
-    //          }
-    //   }
-    //   else {
-    //     console.log(actualEnemy)
-    //   }
-    //   console.log(actualEnemy)
-    // }
 }
 
 
@@ -804,7 +777,7 @@ const movement = (event) => {
     //retrieving ID of previous box
     const previous = document.querySelector("input:checked")
     const IdPrevious = previous.id
-
+    previous.replaceChildren()
     // treating ID so I can select next box
     let selector = IdPrevious.indexOf("/")
     const previousLine = IdPrevious.slice(0, selector)
@@ -911,13 +884,13 @@ const movement = (event) => {
     })
 
     //Hidding all divs
-    // for (let i = 0; i < actualLevel.length; i++) {
-    //     for (let j = 0; j < actualLevel[0].length; j++) {
-    //         let current = document.getElementById(i + "/" + j)
-    //         current.style.visibility = "hidden"
-    //         console.log("CACHE-CACHE")
-    //     }
-    // }
+    for (let i = 0; i < actualLevel.length; i++) {
+        for (let j = 0; j < actualLevel[0].length; j++) {
+            let current = document.getElementById(i + "/" + j)
+            current.style.visibility = "hidden"
+            console.log("CACHE-CACHE")
+        }
+    }
 
     //retrieving ID of actual box
     let actual = document.querySelector("input:checked")
@@ -933,8 +906,8 @@ const movement = (event) => {
     //showing slab neraby far away
 
 
-    for (let i = -2; i < 3; i++) {
-        for (let j = -2; j < 3; j++) {
+    for (let i = -4; i < 5; i++) {
+        for (let j = -4; j < 5; j++) {
             let NearbyId = (parseInt(actualLine) + i) + "/" + (parseInt(actualBox) + j)
            
             if (document.getElementById(NearbyId) != null) {
@@ -945,6 +918,14 @@ const movement = (event) => {
             }
         }
     }
+    // making a blur effect with a div absolute
+    let dimension=widthCase*9
+    let margin=-widthCase*4
+    const createBlur=document.createElement("div")
+    createBlur.style=`position:absolute; height:${dimension}vw; width:${dimension}vw;margin-top:${margin}vw;margin-left:${margin}vw; z-index:1000; background: rgb(0,0,0);background: radial-gradient(circle, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 85%);`
+    actual.appendChild(createBlur)
+
+
     //Display won message when arrived
 
     const end = document.getElementsByClassName("end")
